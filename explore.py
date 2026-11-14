@@ -1,12 +1,21 @@
-import pandas as pd
 import matplotlib.pyplot as plt
 from stars import load_stars
 
 stars = load_stars("data/raw/hyg_v44.csv.gz")
-# print(stars.shape)    
 
-is_orion = stars["con"] == "Ori"    # Select whether true or not if con == Ori
-orion = stars[is_orion]     #Create a new column with only True value in it
+orion = stars[stars["con"] == "Ori"]
+named_orion = orion[orion["proper"].notna()].sort_values("mag")
 
-proper_named_orion = orion[orion["proper"].notna()].sort_values("mag") # Create a column with only proper names in orion and sort
-print(proper_named_orion)
+plt.style.use("dark_background")
+
+# Brighter stars (smaller mag) get bigger dots
+plt.scatter(orion["ra_deg"], orion["dec"], s=(6 - orion["mag"]) * 7, c="white")
+
+for name, x, y in zip(named_orion["proper"], named_orion["ra_deg"], named_orion["dec"]):
+    plt.text(x, y + 0.5, name, fontsize=8)
+
+plt.gca().invert_xaxis()  # sky maps show east (increasing RA) on the left
+plt.xlabel("Right ascension (deg)")
+plt.ylabel("Declination (deg)")
+plt.title("Orion: naked-eye stars (mag ≤ 6)")
+plt.show()
