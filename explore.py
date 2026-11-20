@@ -15,7 +15,7 @@ with open("data/raw/index.json", encoding="utf-8") as f:
 
 
 cons = data["constellations"]
-
+"""
 for c in cons:
     if c["id"] == "CON modern Ori":
         orion_lines = c["lines"]
@@ -34,3 +34,6 @@ for path in orion_lines:
 plot_constellation(stars, "Ori")
 plt.savefig("orion.png", dpi=150)
 plt.show()
+"""
+
+print(data)
