@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 
 COLUMNS = ["id", "hip", "proper", "ra_deg", "dec", "mag", "con"]
 
@@ -13,3 +14,15 @@ def load_stars(path: str, max_mag: float = 6.0) -> pd.DataFrame:
     is_visible = df["mag"] <= max_mag      # exclude stars too faint to see
 
     return df.loc[is_star & is_visible, COLUMNS]
+
+def load_lines(path: str) -> dict:
+    """Map each constellation code to its line paths."""
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+
+    lines = {}
+    for c in data["constellations"]:
+        code = c["id"].split()[-1]  
+        lines[code] = c["lines"]
+
+    return lines
